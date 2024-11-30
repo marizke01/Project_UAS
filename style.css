@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+form {
+    background: #542c54;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+}
+
+form input, form button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    width: 90%;
+}
+
+form button {
+    background: #121212;
+    color: #fff;
+    cursor: pointer;
+}
+
+a {
+    color: #fff;
+}
+
+h1, h2 {
+    color: #fff;
+}
