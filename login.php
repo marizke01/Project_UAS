@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (password_verify($password, $user['password'])) {
             $_SESSION['username'] = $username;
             setcookie("user", $username, time() + (86400 * 30), "/"); // Cookie 30 hari
-            header('Location: dashboard.php');
+            header('Location: index.php');
         } else {
             echo "Invalid password!";
         }
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style2.css">
     <title>Login</title>
 </head>
 <body>
