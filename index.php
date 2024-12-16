@@ -1,3 +1,7 @@
+<?php
+    include 'db.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,14 +32,25 @@
             </div>
         </div>
         <div class="music-player">
-            <div class="player-info">
-                <span id="currentMusic">Tidak ada musik yang diputar</span>
-            </div>
-            <div class="player-controls">
-                <button id="playBtn">▶</button>
-                <button id="pauseBtn">⏸</button>
-                <button id="stopBtn">⏹</button>
-            </div>
+                <?php
+                    $sql = "SELECT * FROM songs";
+                    $result = $conn->query($sql);
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<div class="music-wrapper">';
+                            echo '<div class="player-info">';
+                                echo '<span id="currentMusic">' . $row["title"] . '</span>';
+                            echo '</div>';
+                            echo '<div class="player-info">';
+                                echo '<span id="currentMusic">' . $row["artist"] . '</span>';
+                            echo '</div>';
+                            echo '<div class="player-controls">';
+                                echo '<audio controls>';
+                                    echo '<source src="' . $row["url"] . '" type="audio/mp3" />';
+                                echo '</audio>';
+                            echo '</div>';
+                        echo '</div>'; 
+                    }
+                ?>
         </div>
     </div>
     <footer class="footer">© 2024 MusicHub. All rights reserved.</footer>

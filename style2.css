@@ -2,7 +2,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: "Arial", sans-serif;
     background: #121212; /* Warna gelap modern */
     color: #fff;
     display: flex;
@@ -218,7 +218,7 @@ header {
 }
 
 /* Music Player */
-.music-player {
+.music-wrapper {
     background: #000;
     padding: 15px;
     display: flex;
@@ -254,7 +254,8 @@ form {
     margin: auto;
 }
 
-form input, form button {
+form input,
+form button {
     display: block;
     margin: 15px auto;
     padding: 10px;
