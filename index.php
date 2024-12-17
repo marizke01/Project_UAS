@@ -1,5 +1,8 @@
 <?php
-    include 'db.php';
+include 'db.php';
+
+// Inisialisasi koneksi database
+$db = new Database();
 ?>
 
 <!DOCTYPE html>
@@ -14,8 +17,8 @@
     <div class="top-bar">
         <input type="text" id="searchMusic" placeholder="Cari musik...">
         <div>
-        <button class="btn-login" onclick="window.location.href='login.php'">Masuk</button>
-        <button class="btn-register" onclick="window.location.href='register.php'">Daftar</button>
+            <button class="btn-login" onclick="window.location.href='login.php'">Masuk</button>
+            <button class="btn-register" onclick="window.location.href='register.php'">Daftar</button>
         </div>
     </div>
     
@@ -32,25 +35,25 @@
             </div>
         </div>
         <div class="music-player">
-                <?php
-                    $sql = "SELECT * FROM songs";
-                    $result = $conn->query($sql);
-                    while ($row = $result->fetch_assoc()) {
-                        echo '<div class="music-wrapper">';
-                            echo '<div class="player-info">';
-                                echo '<span id="currentMusic">' . $row["title"] . '</span>';
-                            echo '</div>';
-                            echo '<div class="player-info">';
-                                echo '<span id="currentMusic">' . $row["artist"] . '</span>';
-                            echo '</div>';
-                            echo '<div class="player-controls">';
-                                echo '<audio controls>';
-                                    echo '<source src="' . $row["url"] . '" type="audio/mp3" />';
-                                echo '</audio>';
-                            echo '</div>';
-                        echo '</div>'; 
-                    }
-                ?>
+            <?php
+                // Ambil semua lagu dari database
+                $result = $db->query("SELECT * FROM songs");
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="music-wrapper">';
+                        echo '<div class="player-info">';
+                            echo '<span id="currentMusic">' . htmlspecialchars($row["title"]) . '</span>';
+                        echo '</div>';
+                        echo '<div class="player-info">';
+                            echo '<span id="currentMusic">' . htmlspecialchars($row["artist"]) . '</span>';
+                        echo '</div>';
+                        echo '<div class="player-controls">';
+                            echo '<audio controls>';
+                                echo '<source src="' . htmlspecialchars($row["url"]) . '" type="audio/mp3" />';
+                            echo '</audio>';
+                        echo '</div>';
+                    echo '</div>'; 
+                }
+            ?>
         </div>
     </div>
     <footer class="footer">© 2024 MusicHub. All rights reserved.</footer>

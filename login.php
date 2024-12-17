@@ -1,25 +1,38 @@
-<?php
+<?php 
 session_start();
 include 'db.php';
 
+$errorMessage = ""; // Variabel untuk menampilkan pesan kesalahan
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    // Validasi input
+    if (!empty($_POST['username']) && !empty($_POST['password'])) {
+        $username = htmlspecialchars(trim($_POST['username']));
+        $password = trim($_POST['password']);
 
-    $sql = "SELECT * FROM users WHERE username='$username'";
-    $result = $conn->query($sql);
+        // Cek apakah user ada di database
+        $sql = "SELECT * FROM users WHERE username=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['username'] = $username;
-            setcookie("user", $username, time() + (86400 * 30), "/"); // Cookie 30 hari
-            header('Location: index.php');
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            if (password_verify($password, $user['password'])) {
+                // Login berhasil
+                $_SESSION['username'] = $username;
+                setcookie("user", $username, time() + (86400 * 30), "/"); // Cookie 30 hari
+                header('Location: index.php');
+                exit;
+            } else {
+                $errorMessage = "Password salah!";
+            }
         } else {
-            echo "Invalid password!";
+            $errorMessage = "Username tidak ditemukan!";
         }
     } else {
-        echo "No user found!";
+        $errorMessage = "Semua kolom harus diisi!";
     }
 }
 ?>
@@ -33,6 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <form method="POST" action="">
         <h2>Login</h2>
+        <?php if (!empty($errorMessage)): ?>
+            <p style="color: red;"><?php echo $errorMessage; ?></p>
+        <?php endif; ?>
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Login</button>

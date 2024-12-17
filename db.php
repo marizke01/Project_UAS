@@ -1,12 +1,33 @@
 <?php
-$host = "localhost";
-$user = "root"; // Username database
-$pass = "";     // Password database
-$db   = "music_app";
+class Database {
+    private $host = "localhost";
+    private $user = "root"; // Username database
+    private $pass = "";     // Password database
+    private $db   = "music_app";
+    private $conn;
 
-$conn = new mysqli($host, $user, $pass, $db);
+    // Constructor untuk membuat koneksi saat class diinisialisasi
+    public function __construct() {
+        $this->conn = new mysqli($this->host, $this->user, $this->pass, $this->db);
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
+    }
+
+    // Fungsi untuk menjalankan query
+    public function query($sql) {
+        return $this->conn->query($sql);
+    }
+
+    // Fungsi untuk menutup koneksi (Opsional)
+    public function close() {
+        $this->conn->close();
+    }
+
+    // Getter untuk mendapatkan koneksi langsung (jika diperlukan)
+    public function getConnection() {
+        return $this->conn;
+    }
 }
 ?>
