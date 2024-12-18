@@ -1,28 +1,31 @@
 <?php
 session_start();
-include 'db.php';
+require_once 'db.php'; 
 
-$errorMessage = ""; // Variabel untuk menampilkan pesan kesalahan
+$errorMessage = ""; 
+
+$db = new Database();
+$conn = $db->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Validasi input
-    if (!empty($_POST['username']) && !empty($_POST['password']) && !empty($_FILES['profile_picture'])) {
+    if (!empty($_POST['username']) && !empty($_POST['password']) && isset($_FILES['profile_picture'])) {
         $username = htmlspecialchars(trim($_POST['username']));
         $password = password_hash(trim($_POST['password']), PASSWORD_BCRYPT);
 
-        // Validasi gambar yang diunggah
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
         $profilePicture = $_FILES['profile_picture'];
         $extension = strtolower(pathinfo($profilePicture['name'], PATHINFO_EXTENSION));
 
         if (in_array($extension, $allowedExtensions)) {
-            // Simpan gambar ke folder 'uploads'
             $uploadDir = "uploads/";
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true); 
+            }
             $fileName = uniqid() . "." . $extension;
             $uploadPath = $uploadDir . $fileName;
 
             if (move_uploaded_file($profilePicture['tmp_name'], $uploadPath)) {
-                // Masukkan data ke database
+                
                 $sql = "INSERT INTO users (username, password, profile_picture) VALUES (?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("sss", $username, $password, $fileName);
@@ -32,8 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Location: index.php');
                     exit;
                 } else {
-                    $errorMessage = "Terjadi kesalahan saat menyimpan data!";
+                    $errorMessage = "Terjadi kesalahan saat menyimpan data ke database!";
                 }
+
+                $stmt->close();
             } else {
                 $errorMessage = "Gagal mengunggah gambar!";
             }
@@ -45,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -10,6 +10,7 @@ class Database {
     public function __construct() {
         $this->conn = new mysqli($this->host, $this->user, $this->pass, $this->db);
 
+        // Periksa koneksi
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
         }
@@ -17,7 +18,14 @@ class Database {
 
     // Fungsi untuk menjalankan query
     public function query($sql) {
-        return $this->conn->query($sql);
+        $result = $this->conn->query($sql);
+
+        // Periksa jika query gagal
+        if (!$result) {
+            die("Query error: " . $this->conn->error);
+        }
+
+        return $result;
     }
 
     // Fungsi untuk menutup koneksi (Opsional)
